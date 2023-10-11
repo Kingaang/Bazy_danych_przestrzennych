@@ -1,0 +1,184 @@
+1.CREATE DATABASE firma;
+2.CREATE SCHEMA ksiegowosc;
+
+3.CREATE TABLE ksiegowosc.pracownicy(
+	id_pracownika int NOT NULL,
+	imie varchar(100) NOT NULL,
+	nazwisko varchar(250) NOT NULL,
+	adres varchar(255) NOT NULL,
+	telefon varchar(20) NOT NULL,
+	CONSTRAINT pracownik_pk PRIMARY KEY (id_pracownika)
+);
+COMMENT ON TABLE ksiegowosc.pracownicy IS 'Tablica dotyczaca pracownikow. Klucz glowny ustawiony na id_pracownika';
+
+CREATE TABLE ksiegowosc.godziny (
+	id_godziny int NOT NULL,
+	data date NOT NULL,
+	liczba_godzin int NOT NULL,
+	id_pracownika int NOT NULL,
+	CONSTRAINT godziny_pk PRIMARY KEY (id_godziny)
+);
+COMMENT ON TABLE ksiegowosc.godziny IS 'Tablica dotyczaca liczby przepracowanych godzin. Klucz glowny ustawiony na id_godziny. Wystapi klucz obcy, ktory ustawic na id_pracownika i polaczyc z tabela pracownicy';
+
+CREATE TABLE ksiegowosc.pensja (
+	id_pensji int NOT NULL,
+	stanowisko varchar(150) NOT NULL,
+	kwota int NOT NULL,
+	CONSTRAINT pensja_pk PRIMARY KEY (id_pensji)
+);
+COMMENT ON TABLE ksiegowosc.pensja IS 'Tablica dotyczaca wysokosci pensji pracownikow.Klucz glowny ustawiony na id_pensji';
+
+CREATE TABLE ksiegowosc.premia (
+	id_premii int NOT NULL,
+	rodzaj varchar(80) NOT NULL,
+	kwota int NOT NULL,
+	CONSTRAINT premia_pk PRIMARY KEY (id_premii)
+);
+COMMENT ON TABLE ksiegowosc.premia IS 'Tablica dotyczaca wysokosci premii dla kazdego pracownika. Klucz glowny ustawiony na id_premii';
+
+CREATE TABLE ksiegowosc.wynagrodzenie (
+	id_wynagrodzenia int NOT NULL,
+	data date NOT NULL,
+	liczba_godzin int NOT NULL,
+	id_pracownika int NOT NULL,
+	id_godziny int NOT NULL,
+	id_pensji int NOT NULL,
+	id_premii int NOT NULL,
+	CONSTRAINT wynagrodzenia_pk PRIMARY KEY (id_wynagrodzenia)
+);
+COMMENT ON TABLE ksiegowosc.wynagrodzenie IS 'Tablica dotyczaca wynagrodzen pracownikow. Klucz glowny ustawiony na id_wynagrodzenia.Wystapia klucze obce, ktore ustawic na id_pracownika,id_godziny,id_pensji,id_premii z odpowiednimi tabelami';
+
+ALTER TABLE ksiegowosc.godziny ADD FOREIGN KEY (id_pracownika) REFERENCES ksiegowosc.pracownicy(id_pracownika);
+ALTER TABLE ksiegowosc.wynagrodzenie ADD FOREIGN KEY (id_pracownika) REFERENCES ksiegowosc.pracownicy(id_pracownika);
+ALTER TABLE ksiegowosc.wynagrodzenie ADD FOREIGN KEY (id_godziny) REFERENCES ksiegowosc.godziny(id_godziny);
+ALTER TABLE ksiegowosc.wynagrodzenie ADD FOREIGN KEY (id_pensji) REFERENCES ksiegowosc.pensja(id_pensji);
+ALTER TABLE ksiegowosc.wynagrodzenie ADD FOREIGN KEY (id_premii) REFERENCES ksiegowosc.premia(id_premii);
+
+4.INSERT INTO ksiegowosc.pracownicy (id_pracownika,imie,nazwisko,adres,telefon) VALUES (1,'Jan', 'Kowalski', 'ul.Debowa 23', '487-569-234');
+INSERT INTO ksiegowosc.pracownicy (id_pracownika,imie,nazwisko,adres,telefon) VALUES (2,'Kinga', 'Kaleta', 'ul.Slomiana 13', '796-562-733');
+INSERT INTO ksiegowosc.pracownicy (id_pracownika,imie,nazwisko,adres,telefon) VALUES (3,'Natalia', 'Krupa', 'ul.Dworska 45', '987-939-198');
+INSERT INTO ksiegowosc.pracownicy (id_pracownika,imie,nazwisko,adres,telefon) VALUES (4,'Natalia', 'Janusz', 'ul.Barwna 11', '856-785-465');
+INSERT INTO ksiegowosc.pracownicy (id_pracownika,imie,nazwisko,adres,telefon) VALUES (5,'Jan', 'Kowal', 'ul.Warty 96', '788-326-145');
+INSERT INTO ksiegowosc.pracownicy (id_pracownika,imie,nazwisko,adres,telefon) VALUES (6,'Sara', 'Kowalska', 'ul.Debowa 10', '896-787-777');
+INSERT INTO ksiegowosc.pracownicy (id_pracownika,imie,nazwisko,adres,telefon) VALUES (7,'Kamil', 'Szal', 'ul.Morska 1', '360-002-007');
+INSERT INTO ksiegowosc.pracownicy (id_pracownika,imie,nazwisko,adres,telefon) VALUES (8,'Gabriel', 'Lampa', 'ul.Rudera 2', '965-444-008');
+INSERT INTO ksiegowosc.pracownicy (id_pracownika,imie,nazwisko,adres,telefon) VALUES (9,'Wiktoria', 'Stal', 'ul.Swieta 64', '888-026-090');
+INSERT INTO ksiegowosc.pracownicy (id_pracownika,imie,nazwisko,adres,telefon) VALUES (10,'Janina', 'Ser', 'ul.Drewno 73', '265-458-787');
+
+INSERT INTO ksiegowosc.godziny (id_godziny, data, liczba_godzin , id_pracownika) VALUES (1,'2010-04-01',195,1);
+INSERT INTO ksiegowosc.godziny (id_godziny, data, liczba_godzin , id_pracownika) VALUES (2,'2012-01-15',180,2);
+INSERT INTO ksiegowosc.godziny (id_godziny, data, liczba_godzin , id_pracownika) VALUES (3,'2011-08-01',145,3);
+INSERT INTO ksiegowosc.godziny (id_godziny, data, liczba_godzin , id_pracownika) VALUES (4,'2010-07-01',158,4);
+INSERT INTO ksiegowosc.godziny (id_godziny, data, liczba_godzin , id_pracownika) VALUES (5,'2015-05-01',120,5);
+INSERT INTO ksiegowosc.godziny (id_godziny, data, liczba_godzin , id_pracownika) VALUES (6,'2010-02-15',170,6);
+INSERT INTO ksiegowosc.godziny (id_godziny, data, liczba_godzin , id_pracownika) VALUES (7,'2014-09-01',165,7);
+INSERT INTO ksiegowosc.godziny (id_godziny, data, liczba_godzin , id_pracownika) VALUES (8,'2019-12-05',90,8);
+INSERT INTO ksiegowosc.godziny (id_godziny, data, liczba_godzin , id_pracownika) VALUES (9,'2013-06-01',190,9);
+INSERT INTO ksiegowosc.godziny (id_godziny, data, liczba_godzin , id_pracownika) VALUES (10,'2018-05-20',100,10);
+
+INSERT INTO ksiegowosc.pensja (id_pensji, stanowisko, kwota) VALUES (1,'Deweloper',10500);
+INSERT INTO ksiegowosc.pensja (id_pensji, stanowisko, kwota) VALUES (2,'Analityk',9500);
+INSERT INTO ksiegowosc.pensja (id_pensji, stanowisko, kwota) VALUES (3,'Analityk',9500);
+INSERT INTO ksiegowosc.pensja (id_pensji, stanowisko, kwota) VALUES (4,'Human Resources',10000);
+INSERT INTO ksiegowosc.pensja (id_pensji, stanowisko, kwota) VALUES (5,'Project Manager',9000);
+INSERT INTO ksiegowosc.pensja (id_pensji, stanowisko, kwota) VALUES (6,'Ksiegowa',5000);
+INSERT INTO ksiegowosc.pensja (id_pensji, stanowisko, kwota) VALUES (7,'Stazysta',1500);
+INSERT INTO ksiegowosc.pensja (id_pensji, stanowisko, kwota) VALUES (8,'Kierownik',12000);
+INSERT INTO ksiegowosc.pensja (id_pensji, stanowisko, kwota) VALUES (9,'Sprzataczka',1500);
+INSERT INTO ksiegowosc.pensja (id_pensji, stanowisko, kwota) VALUES (10,'Asystentka',6000);
+
+INSERT INTO ksiegowosc.premia (id_premii, rodzaj, kwota) VALUES (1,'Nadgodziny',3000);
+INSERT INTO ksiegowosc.premia (id_premii, rodzaj, kwota) VALUES (2,'Brak',0);
+INSERT INTO ksiegowosc.premia (id_premii, rodzaj, kwota) VALUES (3,'Premia swiateczna',400);
+INSERT INTO ksiegowosc.premia (id_premii, rodzaj, kwota) VALUES (4,'Premia swiateczna',500);
+INSERT INTO ksiegowosc.premia (id_premii, rodzaj, kwota) VALUES (5,'Projekty',2000);
+INSERT INTO ksiegowosc.premia (id_premii, rodzaj, kwota) VALUES (6,'Brak',0);
+INSERT INTO ksiegowosc.premia (id_premii, rodzaj, kwota) VALUES (7,'Staz',100);
+INSERT INTO ksiegowosc.premia (id_premii, rodzaj, kwota) VALUES (8,'Premia swiateczna',500);
+INSERT INTO ksiegowosc.premia (id_premii, rodzaj, kwota) VALUES (9,'Brak',0);
+INSERT INTO ksiegowosc.premia (id_premii, rodzaj, kwota) VALUES (10,'Premia swiateczna',300);
+
+ALTER TABLE ksiegowosc.wynagrodzenie DROP COLUMN liczba_godzin;
+
+INSERT INTO ksiegowosc.wynagrodzenie (id_wynagrodzenia, data, id_pracownika, id_godziny, id_pensji, id_premii) VALUES (1,'2023-10-02',1,1,1,1);
+INSERT INTO ksiegowosc.wynagrodzenie (id_wynagrodzenia, data, id_pracownika, id_godziny, id_pensji, id_premii) VALUES (2,'2023-10-02',2,2,2,2);
+INSERT INTO ksiegowosc.wynagrodzenie (id_wynagrodzenia, data, id_pracownika, id_godziny, id_pensji, id_premii) VALUES (3,'2023-10-02',3,3,3,3);
+INSERT INTO ksiegowosc.wynagrodzenie (id_wynagrodzenia, data, id_pracownika, id_godziny, id_pensji, id_premii) VALUES (4,'2023-10-02',4,4,4,4);
+INSERT INTO ksiegowosc.wynagrodzenie (id_wynagrodzenia, data, id_pracownika, id_godziny, id_pensji, id_premii) VALUES (5,'2023-10-02',5,5,5,5);
+INSERT INTO ksiegowosc.wynagrodzenie (id_wynagrodzenia, data, id_pracownika, id_godziny, id_pensji, id_premii) VALUES (6,'2023-10-02',6,6,6,6);
+INSERT INTO ksiegowosc.wynagrodzenie (id_wynagrodzenia, data, id_pracownika, id_godziny, id_pensji, id_premii) VALUES (7,'2023-10-02',7,7,7,7);
+INSERT INTO ksiegowosc.wynagrodzenie (id_wynagrodzenia, data, id_pracownika, id_godziny, id_pensji, id_premii) VALUES (8,'2023-10-02',8,8,8,8);
+INSERT INTO ksiegowosc.wynagrodzenie (id_wynagrodzenia, data, id_pracownika, id_godziny, id_pensji, id_premii) VALUES (9,'2023-10-02',9,9,9,9);
+INSERT INTO ksiegowosc.wynagrodzenie (id_wynagrodzenia, data, id_pracownika, id_godziny, id_pensji, id_premii) VALUES (10,'2023-10-02',10,10,10,10);
+
+5.ZAPYTANIA
+a) SELECT id_pracownika,nazwisko FROM ksiegowosc.pracownicy;
+
+b) SELECT pracownicy.id_pracownika FROM ksiegowosc.pracownicy 
+   JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenie.id_pracownika 
+   JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji  = ksiegowosc.pensja.id_pensji 
+   WHERE pensja.kwota > 1000;
+
+c) SELECT pracownicy.id_pracownika FROM ksiegowosc.pracownicy
+   JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenie.id_pracownika 
+   JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji  = ksiegowosc.pensja.id_pensji
+   JOIN ksiegowosc.premia ON ksiegowosc.wynagrodzenie.id_premii = ksiegowosc.premia.id_premii 
+   WHERE premia.kwota = 0 AND pensja.kwota > 2000;
+
+d) SELECT * FROM ksiegowosc.pracownicy WHERE imie LIKE 'J%';
+
+e) SELECT * FROM ksiegowosc.pracownicy WHERE nazwisko like '%n%' and imie like '%a';
+
+f) SELECT imie,nazwisko, SUM(liczba_godzin - 160) as nadgodziny FROM ksiegowosc.pracownicy 
+   JOIN ksiegowosc.godziny ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.godziny.id_godziny 
+   GROUP BY ksiegowosc.pracownicy.id_pracownika;
+
+g) SELECT imie,nazwisko  FROM ksiegowosc.pracownicy 
+   JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenie.id_pracownika 
+   JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji = ksiegowosc.pensja.id_pensji 
+   WHERE pensja.kwota BETWEEN 1500 AND 3000;
+
+h) SELECT imie,nazwisko FROM ksiegowosc.pracownicy 
+   JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenie.id_pracownika 
+   JOIN ksiegowosc.premia ON ksiegowosc.wynagrodzenie.id_premii = ksiegowosc.premia.id_premii 
+   JOIN ksiegowosc.godziny ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.godziny.id_godziny  
+   WHERE godziny.liczba_godzin > 160 and premia.kwota = 0;
+
+i) SELECT * FROM ksiegowosc.pracownicy 
+   JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenie.id_pracownika 
+   JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji = ksiegowosc.pensja.id_pensji 
+   ORDER BY ksiegowosc.pensja.kwota;
+
+j) SELECT imie,nazwisko, sum(ksiegowosc.pensja.kwota + ksiegowosc.premia.kwota) as wyplata FROM ksiegowosc.pracownicy 
+   JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenie.id_pracownika 
+   JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji  = ksiegowosc.pensja.id_pensji 
+   JOIN ksiegowosc.premia ON ksiegowosc.wynagrodzenie.id_premii = ksiegowosc.premia.id_premii 
+   GROUP BY ksiegowosc.pracownicy.id_pracownika 
+   ORDER BY wyplata DESC;
+
+k) SELECT stanowisko, count(stanowisko) as liczba_pracownikow FROM ksiegowosc.pensja 
+   GROUP BY stanowisko ; 
+
+l) SELECT avg(kwota) as srednia, min(kwota) as minimalna, max(kwota) as maksymalna FROM ksiegowosc.pensja 
+   WHERE stanowisko = 'Analityk';
+
+m) SELECT sum(pensja.kwota + premia.kwota) as suma_wynagrodzen FROM ksiegowosc.pracownicy 
+   JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenie.id_pracownika 
+   JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji  = ksiegowosc.pensja.id_pensji 
+   JOIN ksiegowosc.premia ON ksiegowosc.wynagrodzenie.id_premii = ksiegowosc.premia.id_premii;
+
+f) SELECT pensja.stanowisko,sum(pensja.kwota + premia.kwota) as suma_wynagrodzen FROM ksiegowosc.pracownicy 
+   JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenie.id_pracownika 
+   JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji  = ksiegowosc.pensja.id_pensji 
+   JOIN ksiegowosc.premia ON ksiegowosc.wynagrodzenie.id_premii = ksiegowosc.premia.id_premii 
+   GROUP BY ksiegowosc.pensja.stanowisko;
+
+g) SELECT pensja.stanowisko, count(premia.id_premii) as liczba_premii FROM ksiegowosc.pracownicy 
+   JOIN ksiegowosc.wynagrodzenie on ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenie.id_pracownika 
+   JOIN ksiegowosc.pensja on ksiegowosc.wynagrodzenie.id_pensji  = ksiegowosc.pensja.id_pensji 
+   JOIN ksiegowosc.premia on ksiegowosc.wynagrodzenie.id_premii = ksiegowosc.premia.id_premii 
+   WHERE premia.kwota > 0 
+   GROUP BY ksiegowosc.pensja.stanowisko;
+
+h) DELETE FROM ksiegowosc.pracownicy 
+   WHERE ksiegowosc.pracownicy.id_pracownika IN ( SELECT id_pracownika FROM ksiegowosc.pracownicy JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenie.id_pracownika JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji  = ksiegowosc.pensja.id_pensji WHERE pensja.kwota < 1200 );
