@@ -1,0 +1,48 @@
+1. SELECT * FROM  buildings_2018 
+   RIGHT JOIN buildings_2019 ON ST_Equals(buildings_2018.geom,buildings_2019.geom) 
+   WHERE buildings_2018.polygon_id IS NULL; 
+   
+2. CREATE TEMP TABLE new_fresh_buildings AS
+   SELECT buildings_2019.* FROM buildings_2018 
+   RIGHT JOIN buildings_2019 ON ST_Equals(buildings_2018.geom,buildings_2019.geom) 
+   WHERE buildings_2018.polygon_id IS NULL; 
+
+   CREATE TEMP TABLE new_poi AS
+   SELECT poi_2019.* FROM poi_2018 
+   RIGHT JOIN poi_2019 ON ST_Equals(poi_2018.geom,poi_2019.geom) 
+   WHERE poi_2018.poi_id IS NULL; 
+
+   SELECT new_poi.type, COUNT(*) FROM new_poi 
+   JOIN new_fresh_buildings ON ST_Intersects(new_poi.geom,ST_Buffer(new_fresh_buildings.geom,0.005)) 
+   GROUP BY new_poi.type;
+   
+3. CREATE TABLE streets_reprojected AS
+   SELECT *,ST_Transform(ST_SetSRID(geom, 4326), 3068) as geom_new FROM streets_2019;
+   
+4. CREATE TABLE input_points(id int, name varchar,geom geometry);
+   INSERT INTO input_points (id,name,geom ) VALUES (1,'Point1','POINT(8.36093 49.03174)');
+   INSERT INTO input_points (id,name,geom ) VALUES (2,'Point2','POINT(8.39876 49.00644)');
+   
+5. UPDATE input_points 
+   SET geom=ST_Transform(ST_SetSRID(geom, 4326), 3068);
+   
+6. UPDATE streets_node_2019 
+   SET geom=ST_Transform(ST_SetSRID(geom, 4326), 3068);
+
+   CREATE TEMP TABLE line_point AS
+   SELECT ST_MakeLine(geom ORDER BY id) as line FROM input_points;
+
+   SELECT * FROM  streets_node_2019 
+   WHERE ST_Contains(ST_Buffer((SELECT line FROM line_point),0.002),streets_node_2019.geom);
+   
+7. CREATE TEMP TABLE buffer_land AS
+   SELECT ST_Buffer(geom,0.003) as buffer_use FROM land_use_a_2019
+   WHERE type LIKE 'Park%';
+
+   SELECT COUNT(*) FROM poi_2019 CROSS JOIN buffer_land
+   WHERE poi_2019.type LIKE 'Sporting Goods Store' AND ST_Contains(buffer_land.buffer_use,poi_2019.geom);
+   
+8. SELECT ST_Intersection(railways_2019.geom,water_lines_2019.geom) as geom 
+   INTO T2019_KAR_BRIDGES FROM railways_2019 
+   CROSS JOIN water_lines_2019 
+   WHERE ST_GeometryType(ST_Intersection(railways_2019.geom, water_lines_2019.geom)) = 'ST_Point';
