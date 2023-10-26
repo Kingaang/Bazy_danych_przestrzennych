@@ -37,7 +37,7 @@
    
 7. CREATE TEMP TABLE buffer_land AS
    SELECT ST_Buffer(geom,0.003) as buffer_use FROM land_use_a_2019
-   WHERE type LIKE 'Park%';
+   WHERE type LIKE 'Park (%';
 
    SELECT COUNT(*) FROM poi_2019 CROSS JOIN buffer_land
    WHERE poi_2019.type LIKE 'Sporting Goods Store' AND ST_Contains(buffer_land.buffer_use,poi_2019.geom);
