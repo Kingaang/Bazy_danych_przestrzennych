@@ -1,0 +1,5 @@
+C:\Program Files\PostgreSQL\16\bin>shp2pgsql.exe C:\cw3\T2018_KAR_GERMANY\T2018_KAR_BUILDINGS buildings_2018 | psql -d cw3 -p 5434 -U postgres
+
+
+Dla każdej tabeli robiłam tak samo. Jedynie zmieniałam w ścieżce C:\cw3\T2018_KAR_GERMANY\  folder na rok 2019 oraz wybraną tablę, której potrzebowałam w zadaniach, oraz zmieniałam nazwy tabel.
+
